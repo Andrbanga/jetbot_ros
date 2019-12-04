@@ -7,7 +7,7 @@ from geometry_msgs.msg import Twist
 vel_pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
 def joy_teleop(msg):
     k_speed = 0.5
-    if msg.buttons[5] == 1:
+    if msg.buttons[7] == 1:
         k_speed = 1
     cmd_vel = Twist()
     cmd_vel.angular.x = msg.axes[0] * k_speed
