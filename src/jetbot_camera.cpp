@@ -117,7 +117,7 @@ int main(int argc, char **argv)
 	/*
 	 * advertise publisher topics
 	 */
-	ros::Publisher camera_publisher = private_nh.advertise<sensor_msgs::Image>("raw", 2);
+	ros::Publisher camera_publisher = private_nh.advertise<sensor_msgs::Image>("image_raw", 2);
 	camera_pub = &camera_publisher;
 
 
