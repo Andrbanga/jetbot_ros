@@ -4,6 +4,7 @@ import time
 
 from Adafruit_MotorHAT import Adafruit_MotorHAT
 from std_msgs.msg import String
+from sensor_msgs.msg import Joy
 
 
 
@@ -23,7 +24,7 @@ def set_speed(motor_ID, value):
 	
 	motor.setSpeed(speed)
 
-	if value > 0:
+	if value < 0:
 		motor.run(Adafruit_MotorHAT.FORWARD)
 	else:
 		motor.run(Adafruit_MotorHAT.BACKWARD)
@@ -42,30 +43,30 @@ def all_stop():
 def on_cmd_dir(msg):
 	rospy.loginfo(rospy.get_caller_id() + ' cmd_dir=%s', msg.data)
 
-# raw L/R motor commands (speed, speed)
-def on_cmd_raw(msg):
-	rospy.loginfo(rospy.get_caller_id() + ' cmd_raw=%s', msg.data)
 
 # simple string commands (left/right/forward/backward/stop)
-def on_cmd_str(msg):
-	rospy.loginfo(rospy.get_caller_id() + ' cmd_str=%s', msg.data)
-
-	if msg.data.lower() == "left":
-		set_speed(motor_left_ID,  -1.0)
-		set_speed(motor_right_ID,  1.0) 
-	elif msg.data.lower() == "right":
-		set_speed(motor_left_ID,   1.0)
-		set_speed(motor_right_ID, -1.0) 
-	elif msg.data.lower() == "forward":
-		set_speed(motor_left_ID,   1.0)
-		set_speed(motor_right_ID,  1.0)
-	elif msg.data.lower() == "backward":
-		set_speed(motor_left_ID,  -1.0)
-		set_speed(motor_right_ID, -1.0)  
-	elif msg.data.lower() == "stop":
-		all_stop()
+def joy_teleop(msg):
+	# turn left
+	if msg.axes[0] > 0.0:
+		vel = msg.axes[0]
+		set_speed(motor_left_ID,  -vel)
+		set_speed(motor_right_ID,  vel)
+	# turn right
+	elif msg.axes[0] < 0.0:
+		vel = msg.axes[0]
+		set_speed(motor_left_ID,   vel)
+		set_speed(motor_right_ID, -vel) 
+	# go forward
+	elif msg.axes[4] > 0.0:
+		vel = msg.axes[0]
+		set_speed(motor_left_ID,   vel)
+		set_speed(motor_right_ID,  vel)
+	# go backward
+	elif msg.axes[4] > 0.0:
+		set_speed(motor_left_ID,  -vel)
+		set_speed(motor_right_ID, -vel)  
 	else:
-		rospy.logerror(rospy.get_caller_id() + ' invalid cmd_str=%s', msg.data)
+		all_stop()
 
 
 # initialization
@@ -84,11 +85,10 @@ if __name__ == '__main__':
 	all_stop()
 
 	# setup ros node
-	rospy.init_node('jetbot_motors')
+	rospy.init_node('jetbot_joy_teleop')
 	
-	rospy.Subscriber('~cmd_dir', String, on_cmd_dir)
-	rospy.Subscriber('~cmd_raw', String, on_cmd_raw)
-	rospy.Subscriber('~cmd_str', String, on_cmd_str)
+	rospy.Subscriber('joy', Joy, joy_teleop)
+
 
 	# start running
 	rospy.spin()
