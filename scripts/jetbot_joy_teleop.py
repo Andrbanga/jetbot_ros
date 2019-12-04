@@ -58,11 +58,12 @@ def joy_teleop(msg):
 		set_speed(motor_right_ID, vel) 
 	# go forward
 	elif msg.axes[3] > 0.0:
-		vel = msg.axes[0]
+		vel = msg.axes[3]
 		set_speed(motor_left_ID,   vel)
 		set_speed(motor_right_ID,  vel)
 	# go backward
 	elif msg.axes[3] < 0.0:
+		vel = msg.axes[3]
 		set_speed(motor_left_ID,  vel)
 		set_speed(motor_right_ID, vel)  
 	else:
