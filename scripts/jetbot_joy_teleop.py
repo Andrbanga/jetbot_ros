@@ -49,22 +49,22 @@ def joy_teleop(msg):
 	# turn left
 	if msg.axes[0] > 0.0:
 		vel = msg.axes[0]
-		set_speed(motor_left_ID,  -vel)
+		set_speed(motor_left_ID,  vel)
 		set_speed(motor_right_ID,  vel)
 	# turn right
 	elif msg.axes[0] < 0.0:
 		vel = msg.axes[0]
 		set_speed(motor_left_ID,   vel)
-		set_speed(motor_right_ID, -vel) 
+		set_speed(motor_right_ID, vel) 
 	# go forward
-	elif msg.axes[4] > 0.0:
+	elif msg.axes[3] > 0.0:
 		vel = msg.axes[0]
 		set_speed(motor_left_ID,   vel)
 		set_speed(motor_right_ID,  vel)
 	# go backward
-	elif msg.axes[4] > 0.0:
-		set_speed(motor_left_ID,  -vel)
-		set_speed(motor_right_ID, -vel)  
+	elif msg.axes[3] < 0.0:
+		set_speed(motor_left_ID,  vel)
+		set_speed(motor_right_ID, vel)  
 	else:
 		all_stop()
 
