@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="jetbot_ros" type="jetbot_camera.cpp" name="jetbot_camera" >
+    <remap from="~image_raw" to="/imagenet/image_in"/>
+    </node>
+</launch>
