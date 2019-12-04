@@ -1,0 +1,8 @@
+<launch>
+    <node pkg="jetbot_ros" type="jetbot_joystick.py" name="jetbot_joystick" >
+    </node>
+
+    <node pkg="joy" type="joy_node" name="joystick" >
+    </node>
+
+</launch>
